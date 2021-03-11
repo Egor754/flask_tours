@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
   <main class="container mt-3">
-    <h1 class="display-5 mt-4">Летим depart</h1>
-    <p class="mb-4">Найдено kolich туров, от min
-        до max и от min ночей до max ночей</p>
+    <h1 class="display-5 mt-4">Летим {{ departure_name }}</h1>
+    <p class="mb-4">Найдено {{ tours|length }} туров, от {{ pricemin }} до {{ pricemax }} и от
+        {{ nightmin }} ночей до {{ nightmax }}
+        ночей</p>
     <!-- CARDS -->
     <div class="row mt-5">
 <!--      depart-->

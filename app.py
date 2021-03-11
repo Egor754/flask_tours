@@ -21,10 +21,25 @@ def render_index():
 @app.route('/departures/<departure>/')
 def render_departures(departure):
     tours_departure = {}
-    for id,tour in tours.items():
+    for pk, tour in tours.items():
         if tour['departure'] == departure:
-            tours_departure[id] = tour
-    return render_template('tours/departure.html', tours=tours_departure, departures=departures,title=title)
+            tours_departure[pk] = tour
+    if not tours_departure:
+        abort(404)
+    departure_name = departures[departure].replace("Из", "из")
+    prices = [price['price'] for price in tours_departure.values()]
+    nights = [night['nights'] for night in tours_departure.values()]
+    return render_template(
+        'tours/departure.html',
+        tours=tours_departure,
+        departures=departures,
+        departure_name=departure_name,
+        title=title,
+        pricemin=min(prices),
+        pricemax=max(prices),
+        nightmin=min(nights),
+        nightmax=max(nights),
+    )
 
 
 @app.route('/tours/<int:id>/')
@@ -32,11 +47,28 @@ def render_tour(id):
     if id not in tours:
         abort(404)
     tour = tours[id]
-    return render_template('tours/tour.html')
+    tour['departures'] = departures[tour['departure']]
+    return render_template(
+        'tours/tour.html',
+        tour=tour,
+        departures=departures,
+        title=title
+    )
+
+
+# @app.context_processor
+# def title_departures():
+#     return title
+
 
 @app.errorhandler(404)
 def pageNotFound(error):
-    return render_template('errors/404.html',departures=departures,title=title)
+    return render_template('errors/404.html', departures=departures, title=title), 404
+
+
+@app.errorhandler(500)
+def server_error(error):
+    return render_template('errors/500.html'), 500
 
 
 if __name__ == '__main__':
