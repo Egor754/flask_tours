@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def render_index():
-    random_tours = sample(list(tours.values()), 6)
+    random_tours = dict(sample(tours.items(), 6))
     return render_template(
         'tours/index.html',
         departures=departures,
@@ -42,11 +42,11 @@ def render_departures(departure):
     )
 
 
-@app.route('/tours/<int:id>/')
-def render_tour(id):
-    if id not in tours:
+@app.route('/tours/<int:pk>/')
+def render_tour(pk):
+    if pk not in tours:
         abort(404)
-    tour = tours[id]
+    tour = tours[pk]
     tour['departures'] = departures[tour['departure']]
     return render_template(
         'tours/tour.html',
@@ -54,11 +54,6 @@ def render_tour(id):
         departures=departures,
         title=title
     )
-
-
-# @app.context_processor
-# def title_departures():
-#     return title
 
 
 @app.errorhandler(404)
@@ -72,4 +67,4 @@ def server_error(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

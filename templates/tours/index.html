@@ -10,7 +10,7 @@
     </section>
     <!-- CARDS -->
     <div class="row mt-5">
-      {% for tour in random_tours %}
+      {% for id,tour in random_tours.items() %}
       <div class="col-4">
         <div class="card mb-4">
           <div class="embed-responsive embed-responsive-16by9">
@@ -19,7 +19,7 @@
           <div class="card-body">
             <h2 class="h5 card-title">{{ tour.title }}</h2>
             <p class="card-text">{{ tour.description|truncate(94, True) }}</p>
-            <a href="#" class="btn btn-sm btn-primary">Подробнее</a>
+            <a href="{{ url_for('render_tour', pk=id) }}" class="btn btn-sm btn-primary">Подробнее</a>
           </div>
         </div>
       </div>
